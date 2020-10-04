@@ -287,7 +287,7 @@ store.subscribe(()=>{
 	}
 	if (state.selectedNote) {
 		console.log("state.note");
-		if (params['id'] !== state.selectedNote.getUrlName()) {
+		if (params['id'] !== state.selectedNote.getId()) {
 				insertParam('id', state.selectedNote.getId());
 		}
 	}	
