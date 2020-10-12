@@ -3,14 +3,23 @@
 const note_list = document.getElementById("note_list");
 const tittle_text = document.getElementById("headInp");
 const main_text = document.getElementById("mainInp");
+const dataId = document.getElementById("data");
 
 function Note(tittle ="New Note", content=""){
 	this._tittle = tittle;
 	this._content = content;
 	this._id = Date.now();
 	this._selected = false;
+	this._data = data();
 }
 
+
+Note.prototype.setData = function (){
+	this._data = data();
+}
+Note.prototype.getData = function (){
+	return this._data;
+}
 Note.prototype.setSelected = function (selected){
 	this._selected = selected
 }
@@ -80,13 +89,14 @@ function rootReducer(state, action){
 		}
 	} else if (action.type === 'SELECTE_NOTE'){
 		const id = action.playload;
-		console.log('id=',id)
+		//console.log('id=',id)
 		const notesCopy = [...state.notes]
 		let selectedNote = null
 		for(let i = 0; i < notesCopy.length; i++){
 			if (notesCopy[i].getId() == id){
 				notesCopy[i].setSelected(true)
 				selectedNote = notesCopy[i];
+				dataId.textContent = notesCopy[i].getData();
 			} else{
 				notesCopy[i].setSelected(false)
 			}
@@ -118,6 +128,7 @@ function rootReducer(state, action){
 			if(note.getId() == id){
 				note.setContent(content, '')
 				selectedNote = note
+				note.setData();
 			}
 		})
 		return{
@@ -141,7 +152,6 @@ const data = () =>{
 	data = data.slice(0, data.indexOf("GMT"));
 	return data;
 }
-//console.log(getFormattedDate(data));
 
 let getParams = function (url) {
   var params = {}
@@ -149,12 +159,9 @@ let getParams = function (url) {
   url = url || window.location.href;
   parser.href = url;
   var query = parser.search.substring(1);
-  console.log(parser.href);
-  console.log(query);
   var vars = query.split('&');
   for (var i = 0; i < vars.length; i++) {
     var pair = vars[i].split('=')
-    console.log(pair);
     params[pair[0]] = decodeURIComponent(pair[1])
   }
   return params
@@ -187,9 +194,7 @@ function renderNotes(){
 
 window.onclick = (event) =>{
 	const element = event.target;
-	console.log(element);
 	if(element.tagName === 'LI'){
-		console.log(element.dataset);
 		const id = element.dataset['id'];
 		store.dispatch({
 			type: "SELECTE_NOTE",
@@ -200,7 +205,7 @@ window.onclick = (event) =>{
 
 window.onload = () =>{
 	main_text.value = ''
-
+	dataId.value = '';
 	if(localStorage.getItem('notes') !== null){
 		let notes = JSON.parse(localStorage.getItem('notes'))
 		notes.forEach(note =>{
@@ -219,13 +224,10 @@ window.onload = () =>{
 		
 		if (notes) {
 			notes.forEach((note) => {
-
 				note.__proto__ = Note.prototype;
 				note.setSelected(false);
-				// console.log('note id=',note.getId());
 				if (note.getId().toString() === id) {
 					note.setSelected(true);
-					// console.log(store.selectedNote)
 					store.dispatch({
 						type: 'SELECTE_NOTE',
 						playload: note.getId(),
@@ -272,21 +274,15 @@ function insertParam(key, value) {
   window.history.replaceState(null, null, '?' + key + '=' + value)
 }
 
-console.log(getParams()["id"]);
-
 store.subscribe(()=>{
 	const state = store.getState()
-	console.log(state);
 	const selectedNote = state.selectedNote;
-	console.log("store=",state);
-	console.log("selected=",selectedNote);
 	if(selectedNote !== null && selectedNote !== undefined ){
-		main_text.value = selectedNote.getContent();
+		main_text.value == selectedNote.getContent();
 	} else{
-		main_text.value = ''
+		main_text.value == ''
 	}
 	if (state.selectedNote) {
-		console.log("state.note");
 		if (params['id'] !== state.selectedNote.getId()) {
 				insertParam('id', state.selectedNote.getId());
 		}

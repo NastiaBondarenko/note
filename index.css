@@ -21,6 +21,13 @@
 	margin-left: 35%;
 }
 
+#data{
+	color: white;
+    text-align: end;
+    margin-top: 15px;
+    margin-right: 15%;
+}
+
 .butt{
 	margin-bottom: 30px;
 	margin-top: 18px;
