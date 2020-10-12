@@ -83,13 +83,13 @@ function rootReducer(state, action){
 		})
 		notesCopy.push(note)
 		note.setSelected(true);
+		dataId.textContent = note.getData();
 		return{
 			notes:notesCopy,
 			selectedNote : note
 		}
 	} else if (action.type === 'SELECTE_NOTE'){
 		const id = action.playload;
-		//console.log('id=',id)
 		const notesCopy = [...state.notes]
 		let selectedNote = null
 		for(let i = 0; i < notesCopy.length; i++){
@@ -204,8 +204,8 @@ window.onclick = (event) =>{
 } 
 
 window.onload = () =>{
-	main_text.value = ''
-	dataId.value = '';
+	main_text.value = '';
+	//dataId.value = '';
 	if(localStorage.getItem('notes') !== null){
 		let notes = JSON.parse(localStorage.getItem('notes'))
 		notes.forEach(note =>{
@@ -239,6 +239,7 @@ window.onload = () =>{
 }
 
 const new1 = () =>{
+	main_text.value = "";
 	let note = new Note();
 	note.setSelected(true);
 	store.dispatch({
@@ -248,6 +249,7 @@ const new1 = () =>{
 }
 
 const remove =() =>{
+	dataId.textContent = '';
 	const state = store.getState()
 	if(state.selectedNote !== null){
 		store.dispatch({
