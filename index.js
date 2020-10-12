@@ -239,7 +239,7 @@ window.onload = () =>{
 }
 
 const new1 = () =>{
-	main_text.value = "";
+	//main_text.value = "";
 	let note = new Note();
 	note.setSelected(true);
 	store.dispatch({
@@ -280,9 +280,9 @@ store.subscribe(()=>{
 	const state = store.getState()
 	const selectedNote = state.selectedNote;
 	if(selectedNote !== null && selectedNote !== undefined ){
-		main_text.value == selectedNote.getContent();
+		main_text.value = selectedNote.getContent();
 	} else{
-		main_text.value == ''
+		main_text.value = ''
 	}
 	if (state.selectedNote) {
 		if (params['id'] !== state.selectedNote.getId()) {
